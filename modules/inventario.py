@@ -60,13 +60,49 @@ def actualizar_stock(codigo_barras, cantidad_a_descontar):
     finally:
         conn.close()
 
+def actualizar_precio_por_id(id_producto, nuevo_precio):
+    """Actualiza el precio de un producto por su ID."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute('''
+            UPDATE productos 
+            SET precio = ? 
+            WHERE id = ?
+        ''', (nuevo_precio, id_producto))
+        conn.commit()
+        return True, "Precio actualizado con éxito."
+    except Exception as e:
+        return False, f"Error al actualizar el precio: {e}"
+    finally:
+        conn.close()
 
-# PRUEBA RÁPIDA
-if __name__ == "__main__":
-    exito, msj = agregar_producto("7791234567890", "Coca Cola 1.5L", 1500.0, 24)
-    print("Agregar:", msj)
+def actualizar_stock_por_id(id_producto, nuevo_stock):
+    """Actualiza el stock de un producto por su ID."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute('''
+            UPDATE productos 
+            SET stock = ? 
+            WHERE id = ?
+        ''', (nuevo_stock, id_producto))
+        conn.commit()
+        return True, "Stock actualizado con éxito."
+    except Exception as e:
+        return False, f"Error al actualizar el stock: {e}"
+    finally:
+        conn.close()
 
-    prod = buscar_producto("7791234567890")
-    print("Buscar:", prod)
-
-    print("Inventario completo:", obtener_todos())
+def eliminar_producto(id_producto):
+    """Elimina completamente un producto de la base de datos por su ID."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute('DELETE FROM productos WHERE id = ?', (id_producto,))
+        conn.commit()
+        return True, "Producto eliminado con éxito."
+    except Exception as e:
+        return False, f"Error al eliminar el producto: {e}"
+    finally:
+        conn.close()

@@ -1,14 +1,9 @@
 import sqlite3
 import os
 
-# Obtenemos la ruta absoluta de la carpeta donde está este archivo (pos_interno_nivel1/db)
 DIR_DE_ESTE_ARCHIVO = os.path.dirname(os.path.abspath(__file__))
-
-# Subimos un nivel para bajarnos a la raíz del proyecto (pos_interno_nivel1/)
 RAIZ_DEL_PROYECTO = os.path.dirname(DIR_DE_ESTE_ARCHIVO)
-
-# Definimos la ruta de la base de datos siempre apuntando a la raíz del proyecto
-DB_PATH = os.path.join(RAIZ_DEL_PROYECTO, 'pos_interno.db')
+DB_PATH = os.path.join(DIR_DE_ESTE_ARCHIVO, 'pos_interno.db')
 
 def get_connection():
     """Establece y retorna la conexión a la base de datos SQLite."""
@@ -54,7 +49,6 @@ def init_db():
 
     conn.commit()
     conn.close()
-    print(f"Base de datos inicializada correctamente en: {DB_PATH}")
 
 if __name__ == "__main__":
     init_db()

@@ -1,9 +1,23 @@
 import sqlite3
 import os
+import sys
 
-DIR_DE_ESTE_ARCHIVO = os.path.dirname(os.path.abspath(__file__))
-RAIZ_DEL_PROYECTO = os.path.dirname(DIR_DE_ESTE_ARCHIVO)
-DB_PATH = os.path.join(DIR_DE_ESTE_ARCHIVO, 'pos_interno.db')
+# PARA PYINSTALLER
+if getattr(sys, 'frozen', False):
+    # Si está corriendo como .exe
+    # Busca la ruta donde está el ejecutable final
+    RAIZ_DEL_PROYECTO = os.path.dirname(sys.executable)
+else:
+    # Si está corriendo desde el código fuente (.py):
+    DIR_DE_ESTE_ARCHIVO = os.path.dirname(os.path.abspath(__file__))
+    RAIZ_DEL_PROYECTO = os.path.dirname(DIR_DE_ESTE_ARCHIVO)
+
+# Aseguramos que la base de datos se guarde ordenadamente en una carpeta 'db'
+DB_DIR = os.path.join(RAIZ_DEL_PROYECTO, 'db')
+if not os.path.exists(DB_DIR):
+    os.makedirs(DB_DIR)
+
+DB_PATH = os.path.join(DB_DIR, 'pos_interno.db')
 
 def get_connection():
     """Establece y retorna la conexión a la base de datos SQLite."""

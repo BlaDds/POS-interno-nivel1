@@ -34,6 +34,7 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             codigo_barras TEXT UNIQUE NOT NULL,
             nombre TEXT NOT NULL,
+            categoria TEXT DEFAULT '',
             precio REAL NOT NULL,
             stock INTEGER NOT NULL
         )

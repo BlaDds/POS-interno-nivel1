@@ -1,15 +1,19 @@
 import sqlite3
+import time
 from db.database import get_connection
 
-def agregar_producto(codigo_barras, nombre, precio, stock):
+def agregar_producto(codigo_barras, nombre, categoria, precio, stock):
     """Inserta un nuevo producto. Evita duplicados por código de barras."""
+    if not codigo_barras:
+        codigo_barras = f"GEN-{int(time.time())}"
+
     conn = get_connection()
     cursor = conn.cursor()
     try:
         cursor.execute('''
-            INSERT INTO productos (codigo_barras, nombre, precio, stock)
-            VALUES (?, ?, ?, ?)
-        ''', (codigo_barras, nombre, precio, stock))
+            INSERT INTO productos (codigo_barras, nombre, categoria, precio, stock)
+            VALUES (?, ?, ?, ?, ?)
+        ''', (codigo_barras, nombre, categoria, precio, stock))
         conn.commit()
         return True, "Producto agregado con éxito."
     except sqlite3.IntegrityError:
@@ -25,7 +29,7 @@ def buscar_producto(codigo_barras):
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute('''
-        SELECT id, codigo_barras, nombre, precio, stock 
+        SELECT id, codigo_barras, nombre, categoria, precio, stock 
         FROM productos 
         WHERE codigo_barras = ?
     ''', (codigo_barras,))
@@ -37,10 +41,19 @@ def obtener_todos():
     """Trae el inventario entero. Ideal para llenar una tabla (Treeview) en la interfaz."""
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT id, codigo_barras, nombre, precio, stock FROM productos')
+    cursor.execute('SELECT id, codigo_barras, nombre, categoria, precio, stock FROM productos')
     productos = cursor.fetchall()
     conn.close()
     return productos
+
+def obtener_categorias():
+    """Trae una lista con todas las categorías únicas registradas."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT DISTINCT categoria FROM productos WHERE categoria != "" ORDER BY categoria ASC')
+    categorias = [fila[0] for fila in cursor.fetchall()]
+    conn.close()
+    return categorias
 
 def actualizar_stock(codigo_barras, cantidad_a_descontar):
     """Resta la cantidad vendida al stock actual. Se usará al finalizar una venta."""

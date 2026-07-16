@@ -22,10 +22,11 @@ def procesar_venta(carrito):
     cursor = conn.cursor()
 
     try:
-        # 1. Registrar la cabecera de la venta
+        # 1. Registrar la cabecera de la venta (FORZADA HORA LOCAL ARGENTINA PARA NO DEPENDER DEL UTC DE SQLITE)
+        fecha_local = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         cursor.execute('''
-            INSERT INTO ventas (total) VALUES (?)
-        ''', (total_venta,))
+            INSERT INTO ventas (fecha, total) VALUES (?, ?)
+        ''', (fecha_local, total_venta))
         venta_id = cursor.lastrowid
 
         # 2. Registrar el detalle y descontar stock EN LA MISMA TRANSACCIÓN
@@ -67,9 +68,8 @@ def generar_ticket(venta_id, carrito, total):
     with open(ruta_ticket, 'w', encoding='utf-8') as f:
         f.write("========================================\n")
         f.write("      DOCUMENTO NO VÁLIDO COMO FACTURA  \n")
-        f.write("               USO INTERNO              \n")
+        f.write("                USO INTERNO              \n")
         f.write("========================================\n")
-        f.write(f"Venta #: {venta_id}\n")
         f.write(f"Fecha: {fecha_actual}\n")
         f.write("----------------------------------------\n")
         f.write("CANT  DESCRIPCION         SUBTOTAL      \n")

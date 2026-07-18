@@ -57,7 +57,7 @@ class MainWindow(tk.Tk):
         columnas_cat = ("id", "nombre", "categoria", "precio", "stock")
         self.tabla_catalogo = ttk.Treeview(panel_izq, columns=columnas_cat, show="headings", height=20)
         self.tabla_catalogo.heading("id", text="ID")
-        self.tabla_catalogo.heading("nombre", text="Descripción")
+        self.tabla_catalogo.heading("nombre", text="Nombre")
         self.tabla_catalogo.heading("categoria", text="Categoría")
         self.tabla_catalogo.heading("precio", text="Precio")
         self.tabla_catalogo.heading("stock", text="Stock")

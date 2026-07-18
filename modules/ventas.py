@@ -72,7 +72,7 @@ def generar_ticket(venta_id, carrito, total):
         f.write("========================================\n")
         f.write(f"Fecha: {fecha_actual}\n")
         f.write("----------------------------------------\n")
-        f.write("CANT  DESCRIPCION         SUBTOTAL      \n")
+        f.write("CANT  PRODUCTOS         SUBTOTAL      \n")
         f.write("----------------------------------------\n")
 
         for item in carrito:
